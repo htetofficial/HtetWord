@@ -91,6 +91,7 @@ fn readouts(app: &mut WordApp, ui: &mut Ui) -> egui::Rect {
     // ("Go To (Ctrl+Alt+G)", "Go To (⌘⌥G)" on macOS, #3172).
     let page = Button::command(CommandRef::new("edit.goto")).label(text).variant(Variant::GHOST).tooltip(tl!("Go To").to_string()).show(ui);
     count(app, ui);
+    myanmar_count(app, ui);
     if app.session.sel.focus.story != StoryRef::Body && !crate::canvas::in_text_box(app) {
         let label = match crate::canvas::part_kind(app, app.session.sel.focus.story) {
             Some(PartKind::Footnote) => tl!("Editing footnote"),
@@ -140,6 +141,30 @@ fn count(app: &mut WordApp, ui: &mut Ui) {
                 .show(ui);
         }
     });
+}
+
+/// Live Myanmar syllable and reading time count.
+fn myanmar_count(app: &mut WordApp, ui: &mut Ui) {
+    let text = if app.session.sel.is_collapsed() {
+        app.session.doc.plain_text(StoryRef::Body)
+    } else {
+        app.session.selected_text()
+    };
+    if text.chars().any(|c| ('\u{1000}'..='\u{109F}').contains(&c)) {
+        let stats = wordcraft_engine::myanmar::analyze_myanmar_text(&text);
+        if stats.syllables > 0 {
+            let reading_minutes = (stats.syllables / 300).max(1);
+            let tip = format!(
+                "မြန်မာစာ စာရင်းအင်း:\n• စာလုံးတွဲ (Syllables): {}\n• ဗျည်း (Consonants): {}\n• သရနှင့် အသတ်များ: {}\n• ခန့်မှန်းဖတ်ချိန်: ~{} မိနစ်",
+                stats.syllables, stats.consonants, stats.vowels_and_marks, reading_minutes
+            );
+            let label_str = format!("စာလုံးတွဲ: {}", stats.syllables);
+            let out = item(ui, label_str, Some(tip));
+            if out.clicked() {
+                let _ = app.run("myanmar.syllableCount", json!({}));
+            }
+        }
+    }
 }
 
 /// The language at the caret; a click sets the proofing language (Review › Language).

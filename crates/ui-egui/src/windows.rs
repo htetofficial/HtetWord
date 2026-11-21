@@ -101,7 +101,7 @@ impl Windows {
     pub(crate) fn new(doc: u64) -> Windows {
         let mut list = WindowList::new();
         let id = list.open(Window::new(doc, None, None, false));
-        Windows { native: cfg!(not(target_arch = "wasm32")), list, root: id, shown: id, arranged: arrange::State::default(), root_focused: false }
+        Windows { native: false, list, root: id, shown: id, arranged: arrange::State::default(), root_focused: false }
     }
 
     /// Whether documents get native windows of their own.

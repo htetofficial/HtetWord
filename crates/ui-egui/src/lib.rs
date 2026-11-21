@@ -14,9 +14,8 @@ pub const UPDATE_APP: craft::update::app::App = craft::update::app::App {
     ..craft::update::suite::WORDCRAFT
 };
 
-/// WordCraft as the host and the theme pins know it. [`UPDATE_APP`] stays beside it: the updater
-/// takes that type, which carries the icon and accent this one has no place for.
-pub const APP: craft::host::AppInfo = craft::host::AppInfo { id: "wordcraft", name: "WordCraft", version: env!("CARGO_PKG_VERSION") };
+/// HtetWord as the host and the theme pins know it.
+pub const APP: craft::host::AppInfo = craft::host::AppInfo { id: "htetword", name: "HtetWord", version: env!("CARGO_PKG_VERSION") };
 
 /// An English UI string in the current interface language ([`i18n::t`]).
 #[macro_export]
@@ -39,6 +38,7 @@ pub mod control;
 pub mod credits;
 pub mod crop;
 pub mod dialogs;
+pub mod dict_pane;
 pub mod documents;
 pub mod equation_tab;
 pub mod file_dialogs;
@@ -479,6 +479,8 @@ pub struct WordApp {
     pub zotero: zotero::ZoteroLink,
     /// The egui context, once the first frame has run (background work wakes the UI with it).
     pub(crate) ctx: Option<egui::Context>,
+    /// The appearance theme last applied to egui's visuals.
+    pub(crate) applied_theme: Option<crate::theme::Appearance>,
     /// Whether the current command was entered by an input method's own transaction. The engine
     /// uses it to keep IME commits from setting the application-change signal.
     pub(crate) ime_origin: bool,
@@ -546,6 +548,10 @@ pub struct WordApp {
     pub(crate) print: print_page::PrintPage,
     /// The target of each open More Colors dialog, by its dialog key.
     pub(crate) more_colors: std::collections::HashMap<String, colors::Target>,
+    /// Ornagai English-Myanmar Dictionary Task Pane state.
+    pub dict_state: dict_pane::DictPaneState,
+    /// Whether the Dictionary task pane is currently open.
+    pub dict_pane_open: bool,
 }
 
 /// Every `.rs` file under `dir`, subdirectories included, in a fixed order: tests that scan the

@@ -58,6 +58,7 @@ pub fn open(app: &WordApp) -> Vec<Pane> {
         (Pane::RestrictEditing, app.restrict.open),
         (Pane::Proofing, app.spelling_review.is_some()),
         (Pane::Comments, v.comments_pane),
+        (Pane::Dictionary, app.dict_pane_open),
     ]
     .into_iter()
     .filter_map(|(pane, shown)| shown.then_some(pane))

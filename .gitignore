@@ -8,3 +8,9 @@ plan/
 /.claude/
 /target-*/
 /craft-fonts/
+*.keystore
+*.jks
+*.wasm
+packaging/android/app/src/main/assets/public/
+packaging/android/app/src/main/assets/public/*
+

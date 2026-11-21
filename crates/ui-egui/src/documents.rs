@@ -90,6 +90,7 @@ impl WordApp {
         {
             let _ = self.session.close_document(placeholder);
             self.parked.remove(&placeholder);
+            self.no_document = None;
         }
     }
 

@@ -49,6 +49,45 @@ pub(super) fn review(row: &mut RibbonRow<'_>, app: &mut WordApp) {
         let face = Button::new(tl!("Language").to_string()).icon(IconId::new("language")).arrangement(Arrangement::Stacked);
         menu_button(ui, face, tl!("Language").to_string(), None, |ui, _| language_menu(ui, app));
     });
+    row.group(RibbonGroup::new("review.myanmar", "မြန်မာစာ ကိရိယာများ".to_string(), IconId::new("thesaurus").into()), |ui| {
+        Button::command(CommandRef::new("ui.dictionary"))
+            .label("အင်္ဂလိပ်-မြန်မာ\nအဘိဓာန်".to_string())
+            .icon(IconId::new("thesaurus"))
+            .arrangement(Arrangement::Stacked)
+            .show(ui);
+        Stack::new().gap(Gap::Tight).show(ui, |ui, _| {
+            Button::command(CommandRef::new("myanmar.zawgyiToUnicode"))
+                .label("ဇော်ဂျီ ➜ ယူနီကုဒ်".to_string())
+                .show(ui);
+            Button::command(CommandRef::new("myanmar.unicodeToZawgyi"))
+                .label("ယူနီကုဒ် ➜ ဇော်ဂျီ".to_string())
+                .show(ui);
+        });
+        Stack::new().gap(Gap::Tight).show(ui, |ui, _| {
+            Button::command(CommandRef::new("myanmar.toBurmeseNumerals"))
+                .label("ဂဏန်း ၀-၉".to_string())
+                .show(ui);
+            Button::command(CommandRef::new("myanmar.toWesternNumerals"))
+                .label("ဂဏန်း 0-9".to_string())
+                .show(ui);
+        });
+        Stack::new().gap(Gap::Tight).show(ui, |ui, _| {
+            Button::command(CommandRef::new("myanmar.numberToWords"))
+                .label("ဂဏန်း ➜ စာသား".to_string())
+                .show(ui);
+            Button::command(CommandRef::new("myanmar.formatCurrency"))
+                .label("ကျပ်ငွေ ဖော်မတ်".to_string())
+                .show(ui);
+        });
+        Stack::new().gap(Gap::Tight).show(ui, |ui, _| {
+            Button::command(CommandRef::new("myanmar.insertDate"))
+                .label("မြန်မာရက်စွဲ".to_string())
+                .show(ui);
+            Button::command(CommandRef::new("myanmar.cleanText"))
+                .label("စာလုံး သန့်စင်".to_string())
+                .show(ui);
+        });
+    });
     row.group(RibbonGroup::new("review.comments", tl!("Comments").to_string(), IconId::new("newComment").into()), |ui| {
         Button::command(CommandRef::new("review.newComment"))
             .label(tl!("New\nComment").to_string())
@@ -228,9 +267,9 @@ pub(super) fn help(row: &mut RibbonRow<'_>, _app: &mut WordApp) {
             .icon(IconId::new("checkForUpdates"))
             .arrangement(Arrangement::Stacked)
             .show(ui);
-        Button::command(CommandRef::new("ui.discord"))
-            .label(tl!("Community\nDiscord").to_string())
-            .icon(IconId::new("discord"))
+        Button::command(CommandRef::new("ui.dictionary"))
+            .label("အင်္ဂလိပ်-မြန်မာ\nအဘိဓာန်".to_string())
+            .icon(IconId::new("thesaurus"))
             .arrangement(Arrangement::Stacked)
             .show(ui);
     });

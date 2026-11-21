@@ -120,6 +120,7 @@ impl WordApp {
             autosave: true,
             zotero: zotero::ZoteroLink::default(),
             ctx: None,
+            applied_theme: None,
             ime_origin: false,
             user_origin: false,
             read_aloud_error: None,
@@ -167,6 +168,8 @@ impl WordApp {
             equation_symbol_set,
             md_source_visit,
             more_colors,
+            dict_state: Default::default(),
+            dict_pane_open: false,
         }
     }
 
@@ -310,6 +313,10 @@ impl WordApp {
         let lang = i18n::Lang::from_pref(&self.ui.language);
         if self.ctx.is_none() {
             self.ctx = Some(ctx.clone());
+        }
+        if self.applied_theme != Some(self.ui.theme) {
+            crate::theme::apply(ctx, self.ui.theme);
+            self.applied_theme = Some(self.ui.theme);
         }
         updates_ui::tick(self, ctx);
         crate::language_packs::tick(self);

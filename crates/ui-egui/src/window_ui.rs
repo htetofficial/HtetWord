@@ -168,6 +168,7 @@ impl WordApp {
             autosave: _,
             zotero: _,
             ctx: _,
+            applied_theme: _,
             read_aloud_error: _,
             saves_in_flight: _,
             recovery_seen: _,
@@ -175,6 +176,8 @@ impl WordApp {
             windows: _,
             print_document: _,
             clipboard_published: _,
+            dict_state: _,
+            dict_pane_open: _,
             // Per document: the shown document's, swapped with `parked` on a document switch.
             autosave_path: _,
             parked: _,

@@ -480,9 +480,16 @@ impl WordApp {
             && let Some(a) = theme::Appearance::from_code(name)
         {
             self.ui.theme = a;
+            if let Some(ctx) = self.ctx.clone() {
+                crate::theme::apply(&ctx, a);
+            }
         }
         if req.get("toggle").and_then(Value::as_str) == Some("interfaceTheme") {
-            self.ui.theme = if self.ui_is_dark() { theme::Appearance::Light } else { theme::Appearance::Dark };
+            let next = if self.ui_is_dark() { theme::Appearance::SakuraRose } else { theme::Appearance::VelvetMidnight };
+            self.ui.theme = next;
+            if let Some(ctx) = self.ctx.clone() {
+                crate::theme::apply(&ctx, next);
+            }
         }
         if let Some(what) = req.get("open").and_then(Value::as_str) {
             match what {
@@ -656,11 +663,16 @@ impl WordApp {
                 json!({"dark": dark, "theme": self.ui.theme.code()})
             }
             "ui.theme" => {
-                // `light`, `dark` or `system` (follow the OS appearance); no value reads it.
+                // Apply any of the 5 Liquid Glass themes or system mode
                 if let Some(v) = s("value") {
                     match theme::Appearance::from_code(v) {
-                        Some(a) => self.ui.theme = a,
-                        None => return Some(Err(format!("unknown theme {v:?}; use light, dark or system"))),
+                        Some(a) => {
+                            self.ui.theme = a;
+                            if let Some(ctx) = self.ctx.clone() {
+                                crate::theme::apply(&ctx, a);
+                            }
+                        }
+                        None => return Some(Err(format!("unknown theme {v:?}; use sakurarose, lotuspearl, emeraldjade, goldenamber, velvetmidnight, or system"))),
                     }
                 }
                 json!({"theme": self.ui.theme.code(), "dark": self.ui_is_dark()})
@@ -839,8 +851,54 @@ impl WordApp {
                 ));
             }
             "ui.discord" => {
-                self.canvas.open_url = Some("https://discord.gg/artcraft".into());
-                json!({})
+                self.dict_pane_open = !self.dict_pane_open;
+                json!({"dictionary": self.dict_pane_open})
+            }
+            "ui.dictionary" => {
+                if let Some(on) = p.get("value").and_then(Value::as_bool) {
+                    self.dict_pane_open = on;
+                } else {
+                    self.dict_pane_open = !self.dict_pane_open;
+                }
+                let query_word = p.get("word").and_then(Value::as_str).map(str::to_string)
+                    .or_else(|| {
+                        let sel = self.session.selected_text().trim().to_string();
+                        if !sel.is_empty() {
+                            Some(sel)
+                        } else {
+                            None
+                        }
+                    });
+                if let Some(word) = query_word {
+                    self.dict_state.query = word.clone();
+                    self.dict_state.last_searched = word.clone();
+                    if wordcraft_engine::dict::is_myanmar_text(&word) {
+                        self.dict_state.is_reverse_mode = true;
+                        let results = wordcraft_engine::dict::reverse_search(&word, 15);
+                        self.dict_state.reverse_results = results.clone();
+                        self.dict_state.suggestions.clear();
+                        if let Some((_, first_item)) = results.first() {
+                            self.dict_state.current_item = Some(first_item.clone());
+                            self.dict_state.not_found = false;
+                        } else {
+                            self.dict_state.current_item = None;
+                            self.dict_state.not_found = true;
+                        }
+                    } else {
+                        self.dict_state.is_reverse_mode = false;
+                        self.dict_state.reverse_results.clear();
+                        if let Some(item) = wordcraft_engine::dict::lookup(&word) {
+                            self.dict_state.current_item = Some(item);
+                            self.dict_state.not_found = false;
+                            self.dict_state.suggestions.clear();
+                        } else {
+                            self.dict_state.current_item = None;
+                            self.dict_state.not_found = true;
+                            self.dict_state.suggestions = wordcraft_engine::dict::suggest(&word, 8);
+                        }
+                    }
+                }
+                json!({"dictionary": self.dict_pane_open})
             }
             "ui.caretAnimation" => {
                 // File › Options › Advanced › Animation: `value` true or false turns the caret's
@@ -1249,6 +1307,7 @@ pub(crate) fn works_without_document(id: &str) -> bool {
             | "ui.fileBrowser"
             | "ui.makeDefaultApp"
             | "ui.discord"
+            | "ui.dictionary"
             | "ui.caretAnimation"
             | "ui.startScreen"
             | "ui.citations.provider"

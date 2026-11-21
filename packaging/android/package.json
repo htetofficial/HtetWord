@@ -1,0 +1,17 @@
+{
+  "name": "htetword-android",
+  "version": "0.18.1",
+  "description": "HtetWord Android Application - Myanmar Word Processor with Liquid Glass UI and Pyidaungsu Font",
+  "author": "HtetWord Team",
+  "license": "MIT",
+  "scripts": {
+    "build": "cd ../../apps/wordcraft-web && trunk build --release",
+    "sync": "npx @capacitor/cli sync android",
+    "open": "npx @capacitor/cli open android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/cli": "^6.0.0",
+    "@capacitor/core": "^6.0.0"
+  }
+}

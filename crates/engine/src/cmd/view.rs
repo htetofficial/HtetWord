@@ -109,16 +109,19 @@ pub fn specs() -> Vec<CommandSpec> {
                 s.push_ui_request(json!({"toggle": "interfaceTheme"}));
                 Ok(json!({"value": "toggle"}))
             }
-            Some(Value::String(name)) => match name.as_str() {
-                "light" | "dark" | "system" => {
-                    s.push_ui_request(json!({"interfaceTheme": name}));
-                    Ok(json!({"value": name}))
+            Some(Value::String(name)) => {
+                let lower = name.trim().to_ascii_lowercase();
+                match lower.as_str() {
+                    "light" | "dark" | "system" | "sakurarose" | "sakura" | "lotuspearl" | "lotus" | "pearl" | "emeraldjade" | "emerald" | "jade" | "goldenamber" | "golden" | "amber" | "velvetmidnight" | "midnight" => {
+                        s.push_ui_request(json!({"interfaceTheme": lower}));
+                        Ok(json!({"value": lower}))
+                    }
+                    _ => Err(CmdError::Params("interface theme: sakurarose|lotuspearl|emeraldjade|goldenamber|velvetmidnight|system".into())),
                 }
-                _ => Err(CmdError::Params("interface theme: light|dark|system".into())),
-            },
-            _ => Err(CmdError::Params("interface theme: light|dark|system".into())),
+            }
+            _ => Err(CmdError::Params("interface theme: sakurarose|lotuspearl|emeraldjade|goldenamber|velvetmidnight|system".into())),
         })
-        .params(r#"{"value"?: "light" | "dark" | "system"; without it, toggles light and dark}"#)
+        .params(r#"{"value"?: "sakurarose" | "lotuspearl" | "emeraldjade" | "goldenamber" | "velvetmidnight" | "system"; without it, toggles light and dark}"#)
         .pure(),
         CommandSpec::new("view.stylesPane", "Styles Pane", "Home › Styles", |s, v| toggle(s, v, |x| &mut x.styles_pane)).pure(),
         // Where the Styles pane sits: docked right or left, or floating (#1756). No `dock` reads it.

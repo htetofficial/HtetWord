@@ -237,20 +237,19 @@ fn qat_menu(app: &mut WordApp, ui: &mut Ui) -> egui::Rect {
 /// search shows its magnifier alone as well.
 fn trailing(app: &mut WordApp, ui: &mut Ui, step: usize) -> Option<egui::Rect> {
     let mut rects = vec![super::search::show(app, ui, step >= 2)];
-    if app.ui.show_discord {
-        let tip = TooltipSpec::new(tl!("Join the ArtCraft community on Discord").to_string());
-        let clicked = if step >= 1 {
-            let out = IconButton::new(IconId::new("discord")).label(tl!("Discord").to_string()).tooltip(tip).show(ui);
-            rects.push(out.response.rect);
-            out.response.clicked()
-        } else {
-            let out = Button::new(tl!("Discord").to_string()).icon(IconId::new("discord")).tooltip(tip).show(ui);
-            rects.push(out.response.rect);
-            out.clicked()
-        };
-        if clicked {
-            let _ = app.run("ui.discord", json!({}));
-        }
+    // HtetWord English-Myanmar Dictionary in Title Bar
+    let tip = TooltipSpec::new("အင်္ဂလိပ်-မြန်မာ အဘိဓာန် (English-Myanmar Dictionary)".to_string());
+    let clicked = if step >= 1 {
+        let out = IconButton::new(IconId::new("thesaurus")).label("အဘိဓာန်".to_string()).tooltip(tip).show(ui);
+        rects.push(out.response.rect);
+        out.response.clicked()
+    } else {
+        let out = Button::new("အဘိဓာန်".to_string()).icon(IconId::new("thesaurus")).tooltip(tip).show(ui);
+        rects.push(out.response.rect);
+        out.clicked()
+    };
+    if clicked {
+        let _ = app.run("ui.dictionary", json!({}));
     }
     let initials: String = app.session.user_initials().chars().take(2).collect();
     let out = Avatar::new(app.session.author.clone())

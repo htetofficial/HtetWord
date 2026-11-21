@@ -478,6 +478,45 @@ pub(super) fn home(row: &mut RibbonRow<'_>, app: &mut WordApp) {
             .arrangement(Arrangement::Stacked)
             .show(ui);
     });
+    row.group(ribbon_group("myanmar", "မြန်မာစာ", "thesaurus", None), |ui| {
+        Button::command(CommandRef::new("ui.dictionary"))
+            .icon(IconId::new("thesaurus"))
+            .label("အဘိဓာန်".to_string())
+            .tooltip("အင်္ဂလိပ်-မြန်မာ အဘိဓာန် ရှာဖွေရန်".to_string())
+            .arrangement(Arrangement::Stacked)
+            .show(ui);
+        Stack::new().gap(Gap::Tight).show(ui, |ui, _| {
+            Row::new().gap(Gap::None).show(ui, |ui, _| {
+                Button::command(CommandRef::new("myanmar.numberToWords"))
+                    .icon(IconId::new("numbering"))
+                    .label("ဂဏန်း→စာ".to_string())
+                    .tooltip("ဂဏန်းများကို မြန်မာစာသားအဖြစ် ပြောင်းလဲရန်".to_string())
+                    .show(ui);
+                Button::command(CommandRef::new("myanmar.formatCurrency"))
+                    .icon(IconId::new("table"))
+                    .label("ကျပ်ငွေ".to_string())
+                    .tooltip("ကျပ်ငွေ ဖော်မတ် ပြုလုပ်ရန်".to_string())
+                    .show(ui);
+            });
+            Row::new().gap(Gap::None).show(ui, |ui, _| {
+                Button::command(CommandRef::new("myanmar.insertDate"))
+                    .icon(IconId::new("date"))
+                    .label("ရက်စွဲ".to_string())
+                    .tooltip("မြန်မာရက်စွဲ အပြည့်အစုံ ထည့်သွင်းရန်".to_string())
+                    .show(ui);
+                Button::command(CommandRef::new("myanmar.cleanText"))
+                    .icon(IconId::new("wordcraft.pilcrow"))
+                    .label("သန့်စင်".to_string())
+                    .tooltip("စာလုံးပေါင်းနှင့် ကွက်လပ်များ သန့်စင်ရန်".to_string())
+                    .show(ui);
+                Button::command(CommandRef::new("myanmar.zawgyiToUnicode"))
+                    .icon(IconId::new("replace"))
+                    .label("ဇော်ဂျီ→ယူနီ".to_string())
+                    .tooltip("ဇော်ဂျီမှ ယူနီကုဒ်သို့ ပြောင်းလဲရန်".to_string())
+                    .show(ui);
+            });
+        });
+    });
     row.group(ribbon_group("editor", "Editor", "editor", None), |ui| {
         Button::command(CommandRef::new("review.spelling"))
             .icon(IconId::new("editor"))

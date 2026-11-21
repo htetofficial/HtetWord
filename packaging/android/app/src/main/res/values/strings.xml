@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">HtetWord</string>
+    <string name="package_name">com.htetword.app</string>
+    <string name="custom_url_scheme">com.htetword.app</string>
+</resources>

@@ -107,6 +107,10 @@ impl WordApp {
             .status(true, chrome::status_bar::show)
             .body(|ui, _cx, app: &mut WordApp| {
                 if !app.has_document() || stale(app) {
+                    if !stale(app) && !app.ui.backstage {
+                        // Prevent empty blank window: ensure a document is always ready to write.
+                        let _ = app.run("file.new", serde_json::json!({}));
+                    }
                     return;
                 }
                 panes::show(app, ui, |ui, _cx, app| {

@@ -1,0 +1,19 @@
+{
+  "name": "HtetWord - မြန်မာစာအရေးအသား",
+  "short_name": "HtetWord",
+  "description": "Floating & Liquid Glass Word Processor for Myanmar - ဆောင်းပါး၊ စာအုပ်၊ ပို့စ်များ ရေးသားရန်",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FFF5F8",
+  "theme_color": "#E84A7F",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "../../assets/app-icon/wordcraft.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

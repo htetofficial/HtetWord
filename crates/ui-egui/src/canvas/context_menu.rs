@@ -146,6 +146,16 @@ fn rows(app: &mut WordApp, ui: &mut Ui) {
     item(ui, "Merge Formatting", "edit.pasteMerge", json!({}));
     item(ui, "Paste Special…", "edit.pasteSpecial", json!({}));
     rule(ui);
+    let sel_text = app.session.selected_text().trim().to_string();
+    if !sel_text.is_empty() {
+        let preview = if sel_text.chars().count() > 18 {
+            format!("{}…", sel_text.chars().take(18).collect::<String>())
+        } else {
+            sel_text.clone()
+        };
+        item(ui, &format!("📖 အဘိဓာန်တွင် ရှာမည်: \"{}\"", preview), "ui.dictionary", json!({"value": true, "word": sel_text}));
+        rule(ui);
+    }
     if let Some(syn) = app.canvas.context_synonyms.clone().and_then(|v| v.as_array().cloned()).filter(|a| !a.is_empty()) {
         let _ = Menu::submenu_row(ui, tl!("Synonyms").to_string(), |ui, _cx| {
             for w in syn.iter().filter_map(|x| x.as_str()) {

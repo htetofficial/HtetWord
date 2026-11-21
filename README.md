@@ -1,42 +1,83 @@
 <p align="center">
-  <a href="https://getartcraft.com/">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="docs/brand/artcraft-logo-white.svg">
-      <img alt="ArtCraft" src="docs/brand/artcraft-logo.svg" width="200">
-    </picture>
-  </a>
+  <img src="assets/app-icon/wordcraft.svg" width="130" height="130" alt="HtetWord App Icon">
+</p>
+
+<h1 align="center">HtetWord</h1>
+
+<p align="center">
+  <b>🌸 မြန်မာစာနှင့် စာပေအရေးအသားအတွက် သီးသန့်ဖန်တီးထားသော Floating & Liquid Glass UI Word Processor</b><br>
+  <i>An elegant, modern word processor built in pure Rust — inspired by Microsoft Word and Apple Pages.</i>
 </p>
 
 <p align="center">
-  <img src="assets/app-icon/hicolor/256x256/apps/ai.storyteller.wordcraft.png" width="128" height="128" alt="WordCraft icon: a document page and pen on a blue tile">
-</p>
-
-<h1 align="center">WordCraft</h1>
-
-<p align="center">
-  <b>Writing and document design; an open-source, modern word processor, built in pure Rust.</b>
-</p>
-
-<p align="center">
-  A fast, open-source word processor with a familiar workflow: the ribbon, styles,
-  tables, track changes, references and mail merge. It reads and writes .docx, runs natively on
-  macOS, Windows, Linux and BSD, and in the browser via WebAssembly.<br>
-  <i>By the ArtCraft team.</i>
-</p>
-
-<p align="center">
-  <img alt="Written in Rust" src="https://img.shields.io/badge/written%20in-Rust-2b47b5?style=flat-square&logo=rust&logoColor=white">
-  <img alt="Runs on macOS, Windows, Linux, BSD and the web" src="https://img.shields.io/badge/runs%20on-macOS%20%C2%B7%20Windows%20%C2%B7%20Linux%20%C2%B7%20BSD%20%C2%B7%20Web-3b5bdb?style=flat-square">
+  <img alt="Written in Rust" src="https://img.shields.io/badge/written%20in-Rust-E84A7F?style=flat-square&logo=rust&logoColor=white">
+  <img alt="Platforms: macOS, Linux, Windows, Android, Web" src="https://img.shields.io/badge/platforms-macOS%20%C2%B7%20Linux%20%C2%B7%20Windows%20%C2%B7%20Android%20%C2%B7%20Web-F47BA5?style=flat-square">
+  <img alt="UI Font: Pyidaungsu" src="https://img.shields.io/badge/UI%20Font-Pyidaungsu%20%28%E1%80%95%E1%80%BC%E1%80%8order%E1%80%B1%E1%80%91%E1%80%AC%E1%80%84%E1%80%BA%E1%80%85%E1%80%AF%29-9E1B46?style=flat-square">
   <img alt="License: MIT OR Apache-2.0" src="https://img.shields.io/badge/license-MIT%20%2F%20Apache--2.0-2b47b5?style=flat-square">
-  <img alt="Agent-drivable over MCP" src="https://img.shields.io/badge/agents-MCP%20%C2%B7%20CLI-3b5bdb?style=flat-square">
-  <br>
-  <a href="https://sonarcloud.io/project/overview?id=storytold_wordcraft"><img alt="Scanned by SonarCloud" src="https://img.shields.io/badge/Scanned_by-SonarCloud-4b9fd5?style=flat-square&logo=sonarqubecloud&logoColor=white"></a>
-  <a href="https://coderabbit.ai"><img alt="Reviewed by CodeRabbit" src="https://img.shields.io/coderabbit/prs/github/storytold/wordcraft?style=flat-square&label=Reviewed%20by%20CodeRabbit&logo=coderabbit"></a>
 </p>
 
-<p align="center">
-  <a href="https://discord.gg/artcraft"><img alt="Join the ArtCraft community on Discord" src="https://img.shields.io/badge/Join%20us%20on%20Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" height="40"></a>
-</p>
+---
+
+## 🌟 ထူးခြားချက်များ (Key Highlights)
+
+### 🌸 ၁။ မိန်းကလေးဆန်ပြီး လှပသော Floating & Liquid Glass UI
+* **Liquid Glass Aesthetic**: နူးညံ့သိမ်မွေ့သော Sakura Rose (`#E84A7F`) နှင့် Velvet Obsidian Glass Palette ကို အသုံးပြုထားသည်။
+* **Translucent Frosted Glass**: Apple Pages နှင့် modern macOS Dynamic Island ကဲ့သို့ အလင်းပြန်မှုနှင့် blur effect ပါဝင်သော floating formatting capsules နှင့် smooth pill buttons များ ပါဝင်သည်။
+* **Light & Dark Glass Themes**: မျက်စိအေးချမ်းစေမည့် "Sakura Glass (Light)" နှင့် ညဘက်ရေးသားရာတွင် အဆင်ပြေစေမည့် "Velvet Rose Glass (Dark)" ပုံစံနှစ်မျိုး။
+
+### 🇲🇲 ၂။ မြန်မာစာ စာလုံးဖောင့်များ အပြည့်အစုံပါဝင်ပြီးသားဖြစ်ခြင်း (Bundled Myanmar Fonts)
+* **App UI Font**: မြန်မာစာစကားလုံးများ အားလုံးအတွက် **ပြည်ထောင်စုဖောင့် (Pyidaungsu Font)** ကို မူရင်း UI Font အဖြစ် တိုက်ရိုက်သတ်မှတ်ပေးထားပါသည်။
+* **ထည့်သွင်းပေးထားသော ဖောင့်များ**:
+  * **Pyidaungsu Font (Regular & Bold)** - တရားဝင် မြန်မာယူနီကုဒ် စံဖောင့်
+  * **Padauk Font (Regular & Bold)** - OpenType shaping အထူးကောင်းမွန်သော SIL ဖောင့်
+  * **Myanmar Sans Pro** - ခေတ်မီ display sans-serif ဖောင့်
+  * **Inter & Source Serif 4** - အင်္ဂလိပ်စာလုံးများအတွက် premium open-source ဖောင့်များ
+  * စက်ထဲတွင် ထပ်မံသွင်းစရာမလိုဘဲ App နှင့်အတူ offline ပါရှိပြီးသား ဖြစ်သည်။
+
+### ✍️ ၃။ စာရေးဆရာများအတွက် အသင့်သုံး ပုံစံခွက်များ (Writing Templates)
+* **မြန်မာ ဆောင်းပါး (Article / Editorial / Feature Story)**: ဆောင်းပါးခေါင်းစဉ်၊ စာရေးသူအမည်၊ နိဒါန်း၊ စာကိုယ်နှင့် အဓိကအချက်များ ပါဝင်သော ပုံစံခွက်။
+* **မြန်မာ စာအုပ် / ဝတ္ထု (Book / Novel / Memoir)**: အခန်းအလိုက် ခွဲခြားရေးသားနိုင်သော မာတိကာ၊ စာမျက်နှာနံပါတ်၊ စကားပြော indent ပုံစံခွက်။
+* **မြန်မာ ဆိုရှယ်ပို့စ် (Facebook / Telegram / Blog Post)**: ဖတ်ရှုသူကို ဆွဲဆောင်နိုင်မည့် Hook၊ အချက်အလက် ၅ ချက်၊ Call to action နှင့် Hashtags များ ပါဝင်သော ပုံစံခွက်။
+* **မြန်မာ စာစီစာကုံး / အက်ဆေး (Essay & Reflection)**: စာစီစာကုံး ရေးသားရန် ပုံစံခွက်။
+
+### 🛠️ ၄။ မြန်မာစာ အထောက်အကူပြု ကိရိယာများ (Myanmar Writing Tools)
+* **ဇော်ဂျီ ⇄ ယူနီကုဒ် ပြောင်းလဲစနစ် (Zawgyi ⇄ Unicode Converter)**: ဇော်ဂျီဖြင့် ရေးထားသော စာဟောင်းများကို ၁ ချက်နှိပ်ရုံဖြင့် Unicode သို့ ပြောင်းလဲပေးနိုင်ခြင်း။
+* **ဂဏန်းများ အပြန်အလှန်ပြောင်းလဲခြင်း**: အင်္ဂလိပ်ဂဏန်း (0-9) နှင့် မြန်မာဂဏန်း (၀-၉) အပြန်အလှန် ပြောင်းလဲပေးခြင်း။
+* **မြန်မာစာ ဝဏ္ဏနှင့် စာလုံးရေ တွက်ချက်ခြင်း**: စာလုံးရေ၊ ဝဏ္ဏရေ၊ ဗျည်းနှင့် သရအရေအတွက်များကို တိကျစွာ ခွဲခြမ်းစိပ်ဖြာပေးခြင်း။
+* **စာလုံးခွဲ နေရာလွတ် (Zero-Width Space)**: စာပိုဒ်များ wrap လုပ်ရာတွင် စာလုံးမကျိုးစေရန် Syllable break အလိုအလျောက် ထည့်သွင်းပေးခြင်း။
+
+---
+
+## 💻 ထောက်ပံ့ပေးထားသော Platforms (Multiplatform Support)
+
+| Platform | အခြေအနေ | အသုံးပြုပုံ |
+| :--- | :--- | :--- |
+| **macOS (Native)** | ✅ အပြည့်အစုံ | `cargo run -p wordcraft` သို့မဟုတ် `./run_htetword.sh run` |
+| **Web (WASM)** | ✅ အပြည့်အစုံ | Browser တွင် WebAssembly ဖြင့် တိုက်ရိုက် run နိုင်ခြင်း (`./run_htetword.sh web`) |
+| **Android** | ✅ PWA / APK | Mobile Browser မှ Home Screen သို့ Install ပြုလုပ်ခြင်း သို့မဟုတ် Capacitor APK |
+| **Windows / Linux** | ✅ အပြည့်အစုံ | Native build ဖြင့် run နိုင်ခြင်း |
+
+---
+
+## 🚀 အသုံးပြုနည်း (Quick Start)
+
+### ၁။ macOS ပေါ်တွင် Native App ဖွင့်ရန်:
+```bash
+./run_htetword.sh run
+```
+
+### ၂။ Web / PWA အဖြစ် Browser တွင် သုံးရန်:
+```bash
+./run_htetword.sh web
+```
+
+### ၃။ Release Binary တည်ဆောက်ရန်:
+```bash
+./run_htetword.sh build
+```
+Compiled binary သည် `target/release/wordcraft` တွင် ထွက်ရှိပါမည်။
+
+---
 
 <p align="center">
   <a href="https://getartcraft.com/apps/wordcraft"><b>WordCraft on getartcraft.com</b></a> ·

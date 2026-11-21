@@ -4,51 +4,103 @@
 use craft::theme::{ModeChoice, MotionChoice};
 use craft::ui::runtime::env::Scale;
 
-/// The interface theme setting (File › Options › General, View › Interface Theme): a fixed light or
-/// dark palette, or `System`, which follows the OS light/dark appearance live (#115). Dark page
-/// (View › Switch Modes) is separate: it changes how pages are drawn, never the interface (#312).
+/// The interface theme setting (File › Options › General, View › Interface Theme):
+/// 5 Liquid Glass Floating Themes for HtetWord plus System setting.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 #[serde(from = "String", into = "String")]
 pub enum Appearance {
-    Light,
-    Dark,
     #[default]
+    SakuraRose,     // 🌸 Sakura Rose Glass (ချယ်ရီပန်းရောင် ဖန်ကြည်)
+    LotusPearl,     // 🪷 Lotus Pearl Glass (ကြာပန်းပုလဲဖြူ ဖန်ကြည်)
+    EmeraldJade,    // 🌿 Emerald Jade Glass (မြကျောက်စိမ်း ဖန်ကြည်)
+    GoldenAmber,    // ✨ Golden Amber Glass (ရွှေဝါရောင် ပယင်း ဖန်ကြည်)
+    VelvetMidnight, // 🌌 Velvet Midnight Glass (ကတ္တီပါ ညနက်ရောင် ဖန်ကြည်)
     System,
 }
 
 impl Appearance {
-    /// In menu order.
-    pub const ALL: [Appearance; 3] = [Appearance::System, Appearance::Light, Appearance::Dark];
+    #[allow(non_upper_case_globals)]
+    pub const Light: Appearance = Appearance::SakuraRose;
+    #[allow(non_upper_case_globals)]
+    pub const Dark: Appearance = Appearance::VelvetMidnight;
+
+    /// In menu order: 5 distinct Liquid Glass themes + System.
+    pub const ALL: [Appearance; 6] = [
+        Appearance::SakuraRose,
+        Appearance::LotusPearl,
+        Appearance::EmeraldJade,
+        Appearance::GoldenAmber,
+        Appearance::VelvetMidnight,
+        Appearance::System,
+    ];
 
     /// The value used in `ui.json` and by the `ui.theme` command.
     pub fn code(self) -> &'static str {
         match self {
-            Appearance::Light => "light",
-            Appearance::Dark => "dark",
+            Appearance::SakuraRose => "sakurarose",
+            Appearance::LotusPearl => "lotuspearl",
+            Appearance::EmeraldJade => "emeraldjade",
+            Appearance::GoldenAmber => "goldenamber",
+            Appearance::VelvetMidnight => "velvetmidnight",
             Appearance::System => "system",
         }
     }
 
     pub fn from_code(code: &str) -> Option<Appearance> {
-        Appearance::ALL.into_iter().find(|a| a.code().eq_ignore_ascii_case(code.trim()))
-    }
-
-    /// The English label (translated with `tl!` where shown).
-    pub fn label(self) -> &'static str {
-        match self {
-            Appearance::Light => "Light",
-            Appearance::Dark => "Dark",
-            Appearance::System => "Use system setting",
+        let trimmed = code.trim();
+        if trimmed.eq_ignore_ascii_case("sakurarose") || trimmed.eq_ignore_ascii_case("sakura") || trimmed.eq_ignore_ascii_case("light") {
+            Some(Appearance::SakuraRose)
+        } else if trimmed.eq_ignore_ascii_case("lotuspearl") || trimmed.eq_ignore_ascii_case("lotus") || trimmed.eq_ignore_ascii_case("pearl") {
+            Some(Appearance::LotusPearl)
+        } else if trimmed.eq_ignore_ascii_case("emeraldjade") || trimmed.eq_ignore_ascii_case("emerald") || trimmed.eq_ignore_ascii_case("jade") {
+            Some(Appearance::EmeraldJade)
+        } else if trimmed.eq_ignore_ascii_case("goldenamber") || trimmed.eq_ignore_ascii_case("golden") || trimmed.eq_ignore_ascii_case("amber") {
+            Some(Appearance::GoldenAmber)
+        } else if trimmed.eq_ignore_ascii_case("velvetmidnight") || trimmed.eq_ignore_ascii_case("midnight") || trimmed.eq_ignore_ascii_case("dark") {
+            Some(Appearance::VelvetMidnight)
+        } else if trimmed.eq_ignore_ascii_case("system") {
+            Some(Appearance::System)
+        } else {
+            Appearance::ALL.into_iter().find(|a| a.code().eq_ignore_ascii_case(trimmed))
         }
     }
 
-    /// The runtime's mode choice: `System` stays the OS's answer rather than resolving here, so the
-    /// native window keeps its own appearance.
+    /// The display label in menus and settings.
+    pub fn label(self) -> &'static str {
+        match self {
+            Appearance::SakuraRose => "🌸 Sakura Rose Glass (ချယ်ရီပန်းရောင် ဖန်ကြည်)",
+            Appearance::LotusPearl => "🪷 Lotus Pearl Glass (ကြာပန်းပုလဲဖြူ ဖန်ကြည်)",
+            Appearance::EmeraldJade => "🌿 Emerald Jade Glass (မြကျောက်စိမ်း ဖန်ကြည်)",
+            Appearance::GoldenAmber => "✨ Golden Amber Glass (ရွှေဝါရောင် ပယင်း ဖန်ကြည်)",
+            Appearance::VelvetMidnight => "🌌 Velvet Midnight Glass (ကတ္တီပါ ညနက်ရောင် ဖန်ကြည်)",
+            Appearance::System => "System Setting (စနစ်အတိုင်း)",
+        }
+    }
+
+    /// The runtime's mode choice: `System` stays the OS's answer rather than resolving here.
     pub fn mode(self) -> ModeChoice {
         match self {
-            Appearance::Light => ModeChoice::Light,
-            Appearance::Dark => ModeChoice::Dark,
+            Appearance::VelvetMidnight => ModeChoice::Dark,
             Appearance::System => ModeChoice::System,
+            _ => ModeChoice::Light,
+        }
+    }
+
+    /// Whether the interface appearance is dark.
+    pub fn is_dark(self, system: Option<egui::Theme>) -> bool {
+        match self {
+            Appearance::VelvetMidnight => true,
+            Appearance::System => system == Some(egui::Theme::Dark),
+            _ => false,
+        }
+    }
+
+    /// The egui theme preference: `System` stays automatic rather than resolving to a fixed theme.
+    pub fn preference(self) -> egui::ThemePreference {
+        match self {
+            Appearance::VelvetMidnight => egui::ThemePreference::Dark,
+            Appearance::System => egui::ThemePreference::System,
+            _ => egui::ThemePreference::Light,
         }
     }
 }

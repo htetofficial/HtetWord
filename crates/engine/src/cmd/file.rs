@@ -223,6 +223,10 @@ fn new(s: &mut Session, v: &Value) -> CmdResult {
         "letter" => crate::sample::letter(),
         "resume" => crate::sample::resume(),
         "report" => crate::sample::report(),
+        "article" | "myanmar_article" => crate::sample::myanmar_article(),
+        "book" | "myanmar_book" => crate::sample::myanmar_book(),
+        "post" | "myanmar_post" => crate::sample::myanmar_post(),
+        "essay" | "myanmar_essay" => crate::sample::myanmar_essay(),
         _ => normal_document(s),
     };
     s.add_document(doc);

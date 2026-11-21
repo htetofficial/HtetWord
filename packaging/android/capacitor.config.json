@@ -1,0 +1,12 @@
+{
+  "appId": "com.htetword.app",
+  "appName": "HtetWord",
+  "webDir": "../../dist/web",
+  "bundledWebRuntime": false,
+  "android": {
+    "backgroundColor": "#FFF5F8",
+    "allowMixedContent": false,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": true
+  }
+}

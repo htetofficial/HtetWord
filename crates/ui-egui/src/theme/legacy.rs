@@ -6,80 +6,11 @@ use std::sync::Arc;
 
 use egui::{Align2, Color32, CornerRadius, FontData, FontDefinitions, FontFamily, FontId, Rect, Stroke, Visuals};
 
-/// WordCraft's app colour (and its darker ink for text on light backgrounds).
-pub const APP_COLOR: Color32 = Color32::from_rgb(0x3B, 0x5B, 0xDB);
-pub const APP_INK: Color32 = Color32::from_rgb(0x2B, 0x47, 0xB5);
+/// HtetWord's feminine brand app colour (Soft Sakura / Radiant Rose) and darker ink for high contrast.
+pub const APP_COLOR: Color32 = Color32::from_rgb(0xE8, 0x4A, 0x7F);
+pub const APP_INK: Color32 = Color32::from_rgb(0x9E, 0x1B, 0x46);
 
-/// The interface theme setting (File › Options › General, View › Interface Theme): a fixed light or
-/// dark palette, or `System`, which follows the OS light/dark appearance live (#115). Dark page
-/// (View › Switch Modes) is separate: it changes how pages are drawn, never the interface (#312).
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
-#[serde(from = "String", into = "String")]
-pub enum Appearance {
-    Light,
-    Dark,
-    #[default]
-    System,
-}
-
-impl Appearance {
-    /// In menu order.
-    pub const ALL: [Appearance; 3] = [Appearance::System, Appearance::Light, Appearance::Dark];
-
-    /// The value used in `ui.json` and by the `ui.theme` command.
-    pub fn code(self) -> &'static str {
-        match self {
-            Appearance::Light => "light",
-            Appearance::Dark => "dark",
-            Appearance::System => "system",
-        }
-    }
-
-    pub fn from_code(code: &str) -> Option<Appearance> {
-        Appearance::ALL.into_iter().find(|a| a.code().eq_ignore_ascii_case(code.trim()))
-    }
-
-    /// The English label (translated with `tl!` where shown).
-    pub fn label(self) -> &'static str {
-        match self {
-            Appearance::Light => "Light",
-            Appearance::Dark => "Dark",
-            Appearance::System => "Use system setting",
-        }
-    }
-
-    /// Whether the interface is dark, given the OS appearance egui reports (`Context::system_theme`).
-    /// `System` falls back to light when the OS reports none.
-    pub fn is_dark(self, system: Option<egui::Theme>) -> bool {
-        match self {
-            Appearance::Light => false,
-            Appearance::Dark => true,
-            Appearance::System => system == Some(egui::Theme::Dark),
-        }
-    }
-
-    /// The egui theme preference: `System` stays automatic rather than resolving to a fixed theme.
-    pub fn preference(self) -> egui::ThemePreference {
-        match self {
-            Appearance::Light => egui::ThemePreference::Light,
-            Appearance::Dark => egui::ThemePreference::Dark,
-            Appearance::System => egui::ThemePreference::System,
-        }
-    }
-}
-
-/// An unknown saved value reads as the default rather than discarding the whole `ui.json`.
-impl From<String> for Appearance {
-    fn from(s: String) -> Self {
-        Appearance::from_code(&s).unwrap_or_default()
-    }
-}
-
-impl From<Appearance> for String {
-    fn from(a: Appearance) -> Self {
-        a.code().to_string()
-    }
-}
+use super::Appearance;
 
 /// Interface size (File › Options › General, `ui.interfaceSize`): how large the ribbon, menus, panes
 /// and dialogs are drawn, through egui's zoom factor. Document zoom (View › Zoom) is a separate
@@ -343,139 +274,330 @@ pub struct Tokens {
 }
 
 impl Tokens {
-    pub fn light() -> Self {
+    /// 🌸 Theme 1: Sakura Rose Glass (ချယ်ရီပန်းရောင် ဖန်ကြည်) - Radiant Rose & Soft Pink Liquid Glass
+    pub fn sakura_rose() -> Self {
         Tokens {
             dark: false,
-            title_bar: Color32::from_rgb(0xF0, 0xF0, 0xF0),
-            ribbon: Color32::from_rgb(0xF9, 0xF9, 0xF9),
-            tab_strip: Color32::from_rgb(0xF0, 0xF0, 0xF0),
-            canvas: Color32::from_rgb(0xE6, 0xE6, 0xE6),
-            panel: Color32::from_rgb(0xFA, 0xFA, 0xFA),
-            border: Color32::from_rgb(0xE1, 0xE1, 0xE1),
-            border_strong: Color32::from_rgb(0xC8, 0xC8, 0xC8),
-            text: Color32::from_rgb(0x24, 0x24, 0x24),
-            text_dim: Color32::from_rgb(0x61, 0x61, 0x61),
-            text_disabled: Color32::from_rgb(0xA8, 0xA8, 0xA8),
-            icon: Color32::from_rgb(0x42, 0x42, 0x42),
-            hover: Color32::from_rgb(0xE6, 0xE6, 0xE6),
-            pressed: Color32::from_rgb(0xD6, 0xD6, 0xD6),
-            checked: Color32::from_rgb(0xDD, 0xE3, 0xF8),
+            title_bar: Color32::from_rgb(0xFD, 0xF5, 0xF8),
+            ribbon: Color32::from_rgb(0xFF, 0xFA, 0xFC),
+            tab_strip: Color32::from_rgb(0xFA, 0xEF, 0xF4),
+            canvas: Color32::from_rgb(0xF6, 0xEE, 0xF3),
+            panel: Color32::from_rgb(0xFF, 0xFB, 0xFD),
+            border: Color32::from_rgb(0xF2, 0xD8, 0xE3),
+            border_strong: Color32::from_rgb(0xDE, 0xB4, 0xC6),
+            text: Color32::from_rgb(0x2E, 0x22, 0x28),
+            text_dim: Color32::from_rgb(0x6E, 0x5A, 0x64),
+            text_disabled: Color32::from_rgb(0xB4, 0xA2, 0xAC),
+            icon: Color32::from_rgb(0x56, 0x3E, 0x4C),
+            hover: Color32::from_rgb(0xFC, 0xE8, 0xF1),
+            pressed: Color32::from_rgb(0xF7, 0xD2, 0xE2),
+            checked: Color32::from_rgb(0xFD, 0xDF, 0xEC),
             accent: APP_COLOR,
             nav: APP_COLOR,
             accent_text: APP_INK,
             on_accent: Color32::WHITE,
             input: Color32::WHITE,
-            input_border: Color32::from_rgb(0x8A, 0x8A, 0x8A),
-            group_label: Color32::from_rgb(0x70, 0x70, 0x70),
+            input_border: Color32::from_rgb(0xCE, 0x9B, 0xB0),
+            group_label: Color32::from_rgb(0x8A, 0x6D, 0x7D),
             ruler: Color32::from_rgb(0xFF, 0xFF, 0xFF),
-            ruler_margin: Color32::from_rgb(0xD4, 0xD4, 0xD4),
-            ruler_tick: Color32::from_rgb(0x70, 0x70, 0x70),
-            status_bar: Color32::from_rgb(0xF0, 0xF0, 0xF0),
-            selection: Color32::from_rgba_unmultiplied(0x3B, 0x5B, 0xDB, 0x48),
-            find_highlight: Color32::from_rgba_unmultiplied(0xFF, 0xE0, 0x3D, 0x90),
-            page_shadow: Color32::from_rgba_unmultiplied(0, 0, 0, 0x22),
+            ruler_margin: Color32::from_rgb(0xF4, 0xDE, 0xE8),
+            ruler_tick: Color32::from_rgb(0x8A, 0x6D, 0x7D),
+            status_bar: Color32::from_rgb(0xFD, 0xF5, 0xF8),
+            selection: Color32::from_rgba_unmultiplied(0xE8, 0x4A, 0x7F, 0x40),
+            find_highlight: Color32::from_rgba_unmultiplied(0xFF, 0xC2, 0xDE, 0xA0),
+            page_shadow: Color32::from_rgba_unmultiplied(0x60, 0x18, 0x38, 0x1E),
             handle: Color32::WHITE,
-            handle_shadow: Color32::from_rgba_unmultiplied(0, 0, 0, 0x28),
-            guide: Color32::from_rgb(0xC0, 0x28, 0x8C),
-            equation_box: Color32::from_rgb(0x6E, 0x9B, 0xE6),
+            handle_shadow: Color32::from_rgba_unmultiplied(0x60, 0x18, 0x38, 0x28),
+            guide: Color32::from_rgb(0xE8, 0x36, 0x78),
+            equation_box: Color32::from_rgb(0xDE, 0x6B, 0x98),
             crop_handle: Color32::BLACK,
-            crop_dim: Color32::from_rgba_unmultiplied(0x30, 0x30, 0x30, 0xE0),
+            crop_dim: Color32::from_rgba_unmultiplied(0x30, 0x20, 0x28, 0xE0),
             balloon: Color32::WHITE,
-            markup_area: Color32::from_rgb(0xF3, 0xF3, 0xF3),
-            markup_edge: Color32::from_rgb(0xE0, 0xE0, 0xE0),
+            markup_area: Color32::from_rgb(0xFD, 0xF6, 0xF9),
+            markup_edge: Color32::from_rgb(0xF2, 0xD8, 0xE3),
             resolved_text: Color32::from_rgb(0x1B, 0x6B, 0x42),
             author_colors: [
-                Color32::from_rgb(0x2F, 0x6F, 0xD0),
-                Color32::from_rgb(0xB0, 0x3A, 0x2E),
+                Color32::from_rgb(0xE8, 0x4A, 0x7F),
+                Color32::from_rgb(0x9B, 0x51, 0xE0),
                 Color32::from_rgb(0x2E, 0x7D, 0x32),
-                Color32::from_rgb(0x8E, 0x44, 0xAD),
-                Color32::from_rgb(0xE0, 0x7B, 0x1F),
+                Color32::from_rgb(0xF2, 0x99, 0x4A),
+                Color32::from_rgb(0x2F, 0x80, 0xED),
             ],
             leader_colors: [
-                Color32::from_rgb(0x2F, 0x6F, 0xD0),
-                Color32::from_rgb(0xB0, 0x3A, 0x2E),
+                Color32::from_rgb(0xE8, 0x4A, 0x7F),
+                Color32::from_rgb(0x9B, 0x51, 0xE0),
                 Color32::from_rgb(0x2E, 0x7D, 0x32),
-                Color32::from_rgb(0x8E, 0x44, 0xAD),
-                Color32::from_rgb(0xE0, 0x7B, 0x1F),
+                Color32::from_rgb(0xF2, 0x99, 0x4A),
+                Color32::from_rgb(0x2F, 0x80, 0xED),
             ],
             menu: Color32::WHITE,
-            blue: Color32::from_rgb(0x2F, 0x6F, 0xD0),
-            red: Color32::from_rgb(0xD1, 0x3B, 0x3B),
+            blue: Color32::from_rgb(0x6C, 0x5C, 0xEC),
+            red: Color32::from_rgb(0xE8, 0x3B, 0x58),
             green: Color32::from_rgb(0x2E, 0x8B, 0x57),
-            orange: Color32::from_rgb(0xE0, 0x7B, 0x1F),
-            close_hover: Color32::from_rgb(0xC4, 0x2B, 0x1C),
-            close_pressed: Color32::from_rgb(0xA6, 0x23, 0x16),
+            orange: Color32::from_rgb(0xFA, 0x82, 0x4C),
+            close_hover: Color32::from_rgb(0xE8, 0x2A, 0x48),
+            close_pressed: Color32::from_rgb(0xC4, 0x1E, 0x3A),
             on_close: Color32::WHITE,
         }
     }
-    pub fn dark() -> Self {
+
+    /// 🪷 Theme 2: Lotus Pearl Glass (ကြာပန်းပုလဲဖြူ ဖန်ကြည်) - Pearlescent White & Celestial Cyan Glass
+    pub fn lotus_pearl() -> Self {
+        let accent = Color32::from_rgb(0x1F, 0x8A, 0xAA);
+        let ink = Color32::from_rgb(0x0E, 0x54, 0x6A);
+        Tokens {
+            dark: false,
+            title_bar: Color32::from_rgb(0xF0, 0xF7, 0xF9),
+            ribbon: Color32::from_rgb(0xF8, 0xFC, 0xFD),
+            tab_strip: Color32::from_rgb(0xEB, 0xF4, 0xF7),
+            canvas: Color32::from_rgb(0xEE, 0xF5, 0xF8),
+            panel: Color32::from_rgb(0xF8, 0xFC, 0xFD),
+            border: Color32::from_rgb(0xD2, 0xE7, 0xEE),
+            border_strong: Color32::from_rgb(0x9E, 0xC8, 0xD6),
+            text: Color32::from_rgb(0x1B, 0x2A, 0x30),
+            text_dim: Color32::from_rgb(0x4E, 0x69, 0x73),
+            text_disabled: Color32::from_rgb(0x9A, 0xB0, 0xB8),
+            icon: Color32::from_rgb(0x2D, 0x4D, 0x58),
+            hover: Color32::from_rgb(0xE2, 0xF2, 0xF7),
+            pressed: Color32::from_rgb(0xC8, 0xE6, 0xF0),
+            checked: Color32::from_rgb(0xD2, 0xEB, 0xF3),
+            accent,
+            nav: accent,
+            accent_text: ink,
+            on_accent: Color32::WHITE,
+            input: Color32::WHITE,
+            input_border: Color32::from_rgb(0x9B, 0xC6, 0xD4),
+            group_label: Color32::from_rgb(0x60, 0x82, 0x8E),
+            ruler: Color32::WHITE,
+            ruler_margin: Color32::from_rgb(0xDC, 0xEE, 0xF4),
+            ruler_tick: Color32::from_rgb(0x60, 0x82, 0x8E),
+            status_bar: Color32::from_rgb(0xF0, 0xF7, 0xF9),
+            selection: Color32::from_rgba_unmultiplied(0x1F, 0x8A, 0xAA, 0x35),
+            find_highlight: Color32::from_rgba_unmultiplied(0x76, 0xD3, 0xEC, 0x90),
+            page_shadow: Color32::from_rgba_unmultiplied(0x10, 0x30, 0x40, 0x1A),
+            handle: Color32::WHITE,
+            handle_shadow: Color32::from_rgba_unmultiplied(0x10, 0x30, 0x40, 0x25),
+            guide: Color32::from_rgb(0x1F, 0x8A, 0xAA),
+            equation_box: Color32::from_rgb(0x48, 0xA8, 0xC4),
+            crop_handle: Color32::BLACK,
+            crop_dim: Color32::from_rgba_unmultiplied(0x15, 0x25, 0x30, 0xE0),
+            balloon: Color32::WHITE,
+            markup_area: Color32::from_rgb(0xF2, 0xF8, 0xFA),
+            markup_edge: Color32::from_rgb(0xD2, 0xE7, 0xEE),
+            resolved_text: Color32::from_rgb(0x1A, 0x73, 0x48),
+            author_colors: [accent, Color32::from_rgb(0x7B, 0x42, 0xBC), Color32::from_rgb(0x2E, 0x8B, 0x57), Color32::from_rgb(0xE6, 0x7E, 0x22), Color32::from_rgb(0x29, 0x80, 0xB9)],
+            leader_colors: [accent, Color32::from_rgb(0x7B, 0x42, 0xBC), Color32::from_rgb(0x2E, 0x8B, 0x57), Color32::from_rgb(0xE6, 0x7E, 0x22), Color32::from_rgb(0x29, 0x80, 0xB9)],
+            menu: Color32::WHITE,
+            blue: Color32::from_rgb(0x29, 0x80, 0xB9),
+            red: Color32::from_rgb(0xDF, 0x47, 0x59),
+            green: Color32::from_rgb(0x2E, 0x8B, 0x57),
+            orange: Color32::from_rgb(0xE6, 0x7E, 0x22),
+            close_hover: Color32::from_rgb(0xDF, 0x47, 0x59),
+            close_pressed: Color32::from_rgb(0xC0, 0x39, 0x2B),
+            on_close: Color32::WHITE,
+        }
+    }
+
+    /// 🌿 Theme 3: Emerald Jade Glass (မြကျောက်စိမ်း ဖန်ကြည်) - Myanmar Imperial Jade & Mint Mist
+    pub fn emerald_jade() -> Self {
+        let accent = Color32::from_rgb(0x22, 0x8C, 0x52);
+        let ink = Color32::from_rgb(0x11, 0x58, 0x30);
+        Tokens {
+            dark: false,
+            title_bar: Color32::from_rgb(0xF2, 0xF9, 0xF5),
+            ribbon: Color32::from_rgb(0xF9, 0xFC, 0xFA),
+            tab_strip: Color32::from_rgb(0xEB, 0xF6, 0xF0),
+            canvas: Color32::from_rgb(0xEC, 0xF5, 0xEF),
+            panel: Color32::from_rgb(0xF9, 0xFC, 0xFA),
+            border: Color32::from_rgb(0xD0, 0xE8, 0xD8),
+            border_strong: Color32::from_rgb(0x9B, 0xCF, 0xAC),
+            text: Color32::from_rgb(0x1A, 0x2E, 0x21),
+            text_dim: Color32::from_rgb(0x4C, 0x6B, 0x56),
+            text_disabled: Color32::from_rgb(0x97, 0xB2, 0xA0),
+            icon: Color32::from_rgb(0x2A, 0x4F, 0x36),
+            hover: Color32::from_rgb(0xE0, 0xF3, 0xE7),
+            pressed: Color32::from_rgb(0xC4, 0xEA, 0xD1),
+            checked: Color32::from_rgb(0xD0, 0xEF, 0xDC),
+            accent,
+            nav: accent,
+            accent_text: ink,
+            on_accent: Color32::WHITE,
+            input: Color32::WHITE,
+            input_border: Color32::from_rgb(0x96, 0xCC, 0xA8),
+            group_label: Color32::from_rgb(0x56, 0x82, 0x64),
+            ruler: Color32::WHITE,
+            ruler_margin: Color32::from_rgb(0xDB, 0xEF, 0xE2),
+            ruler_tick: Color32::from_rgb(0x56, 0x82, 0x64),
+            status_bar: Color32::from_rgb(0xF2, 0xF9, 0xF5),
+            selection: Color32::from_rgba_unmultiplied(0x22, 0x8C, 0x52, 0x35),
+            find_highlight: Color32::from_rgba_unmultiplied(0x76, 0xD7, 0x9D, 0x90),
+            page_shadow: Color32::from_rgba_unmultiplied(0x10, 0x38, 0x20, 0x1A),
+            handle: Color32::WHITE,
+            handle_shadow: Color32::from_rgba_unmultiplied(0x10, 0x38, 0x20, 0x25),
+            guide: Color32::from_rgb(0x22, 0x8C, 0x52),
+            equation_box: Color32::from_rgb(0x44, 0xAB, 0x72),
+            crop_handle: Color32::BLACK,
+            crop_dim: Color32::from_rgba_unmultiplied(0x15, 0x2C, 0x1E, 0xE0),
+            balloon: Color32::WHITE,
+            markup_area: Color32::from_rgb(0xF3, 0xFA, 0xF6),
+            markup_edge: Color32::from_rgb(0xD0, 0xE8, 0xD8),
+            resolved_text: Color32::from_rgb(0x1B, 0x78, 0x44),
+            author_colors: [accent, Color32::from_rgb(0x16, 0xA0, 0x85), Color32::from_rgb(0x8E, 0x44, 0xAD), Color32::from_rgb(0xD3, 0x54, 0x00), Color32::from_rgb(0x29, 0x80, 0xB9)],
+            leader_colors: [accent, Color32::from_rgb(0x16, 0xA0, 0x85), Color32::from_rgb(0x8E, 0x44, 0xAD), Color32::from_rgb(0xD3, 0x54, 0x00), Color32::from_rgb(0x29, 0x80, 0xB9)],
+            menu: Color32::WHITE,
+            blue: Color32::from_rgb(0x29, 0x80, 0xB9),
+            red: Color32::from_rgb(0xDF, 0x47, 0x59),
+            green: Color32::from_rgb(0x22, 0x8C, 0x52),
+            orange: Color32::from_rgb(0xD3, 0x54, 0x00),
+            close_hover: Color32::from_rgb(0xDF, 0x47, 0x59),
+            close_pressed: Color32::from_rgb(0xC0, 0x39, 0x2B),
+            on_close: Color32::WHITE,
+        }
+    }
+
+    /// ✨ Theme 4: Golden Amber Glass (ရွှေဝါရောင် ပယင်း ဖန်ကြည်) - Myanmar Royal Gold & Warm Amber
+    pub fn golden_amber() -> Self {
+        let accent = Color32::from_rgb(0xC4, 0x86, 0x16);
+        let ink = Color32::from_rgb(0x7F, 0x51, 0x05);
+        Tokens {
+            dark: false,
+            title_bar: Color32::from_rgb(0xFD, 0xFA, 0xF1),
+            ribbon: Color32::from_rgb(0xFF, 0xFE, 0xFB),
+            tab_strip: Color32::from_rgb(0xFB, 0xF6, 0xE7),
+            canvas: Color32::from_rgb(0xF7, 0xF2, 0xE2),
+            panel: Color32::from_rgb(0xFF, 0xFE, 0xFB),
+            border: Color32::from_rgb(0xF0, 0xE4, 0xC4),
+            border_strong: Color32::from_rgb(0xDC, 0xC5, 0x88),
+            text: Color32::from_rgb(0x32, 0x27, 0x14),
+            text_dim: Color32::from_rgb(0x71, 0x5F, 0x3E),
+            text_disabled: Color32::from_rgb(0xB8, 0xA9, 0x8C),
+            icon: Color32::from_rgb(0x59, 0x45, 0x22),
+            hover: Color32::from_rgb(0xF9, 0xF1, 0xD6),
+            pressed: Color32::from_rgb(0xF2, 0xE3, 0xB6),
+            checked: Color32::from_rgb(0xF8, 0xEA, 0xC2),
+            accent,
+            nav: accent,
+            accent_text: ink,
+            on_accent: Color32::WHITE,
+            input: Color32::WHITE,
+            input_border: Color32::from_rgb(0xD6, 0xBA, 0x76),
+            group_label: Color32::from_rgb(0x8C, 0x76, 0x4D),
+            ruler: Color32::WHITE,
+            ruler_margin: Color32::from_rgb(0xF2, 0xE7, 0xC8),
+            ruler_tick: Color32::from_rgb(0x8C, 0x76, 0x4D),
+            status_bar: Color32::from_rgb(0xFD, 0xFA, 0xF1),
+            selection: Color32::from_rgba_unmultiplied(0xC4, 0x86, 0x16, 0x35),
+            find_highlight: Color32::from_rgba_unmultiplied(0xF5, 0xC8, 0x64, 0x90),
+            page_shadow: Color32::from_rgba_unmultiplied(0x40, 0x30, 0x0A, 0x1A),
+            handle: Color32::WHITE,
+            handle_shadow: Color32::from_rgba_unmultiplied(0x40, 0x30, 0x0A, 0x25),
+            guide: Color32::from_rgb(0xC4, 0x86, 0x16),
+            equation_box: Color32::from_rgb(0xDE, 0xA1, 0x35),
+            crop_handle: Color32::BLACK,
+            crop_dim: Color32::from_rgba_unmultiplied(0x2D, 0x23, 0x12, 0xE0),
+            balloon: Color32::WHITE,
+            markup_area: Color32::from_rgb(0xFD, 0xFB, 0xF4),
+            markup_edge: Color32::from_rgb(0xF0, 0xE4, 0xC4),
+            resolved_text: Color32::from_rgb(0x1B, 0x75, 0x3B),
+            author_colors: [accent, Color32::from_rgb(0xD3, 0x54, 0x00), Color32::from_rgb(0x8E, 0x44, 0xAD), Color32::from_rgb(0x27, 0xAE, 0x60), Color32::from_rgb(0x29, 0x80, 0xB9)],
+            leader_colors: [accent, Color32::from_rgb(0xD3, 0x54, 0x00), Color32::from_rgb(0x8E, 0x44, 0xAD), Color32::from_rgb(0x27, 0xAE, 0x60), Color32::from_rgb(0x29, 0x80, 0xB9)],
+            menu: Color32::WHITE,
+            blue: Color32::from_rgb(0x29, 0x80, 0xB9),
+            red: Color32::from_rgb(0xDF, 0x47, 0x59),
+            green: Color32::from_rgb(0x27, 0xAE, 0x60),
+            orange: Color32::from_rgb(0xD3, 0x54, 0x00),
+            close_hover: Color32::from_rgb(0xDF, 0x47, 0x59),
+            close_pressed: Color32::from_rgb(0xC0, 0x39, 0x2B),
+            on_close: Color32::WHITE,
+        }
+    }
+
+    /// 🌌 Theme 5: Velvet Midnight Glass (ကတ္တီပါ ညနက်ရောင် ဖန်ကြည်) - Deep Obsidian Velvet Dark Mode
+    pub fn velvet_midnight() -> Self {
         Tokens {
             dark: true,
-            title_bar: Color32::from_rgb(0x1F, 0x1F, 0x1F),
-            ribbon: Color32::from_rgb(0x29, 0x29, 0x29),
-            tab_strip: Color32::from_rgb(0x1F, 0x1F, 0x1F),
-            canvas: Color32::from_rgb(0x14, 0x14, 0x14),
-            panel: Color32::from_rgb(0x26, 0x26, 0x26),
-            border: Color32::from_rgb(0x3A, 0x3A, 0x3A),
-            border_strong: Color32::from_rgb(0x55, 0x55, 0x55),
-            text: Color32::from_rgb(0xEE, 0xEE, 0xEE),
-            text_dim: Color32::from_rgb(0xC8, 0xC8, 0xC8),
-            text_disabled: Color32::from_rgb(0x6A, 0x6A, 0x6A),
-            icon: Color32::from_rgb(0xDD, 0xDD, 0xDD),
-            hover: Color32::from_rgb(0x3D, 0x3D, 0x3D),
-            pressed: Color32::from_rgb(0x4A, 0x4A, 0x4A),
-            checked: Color32::from_rgb(0x2E, 0x3A, 0x66),
-            accent: Color32::from_rgb(0x7A, 0x93, 0xF0),
-            nav: Color32::from_rgb(0x27, 0x31, 0x5C),
-            accent_text: Color32::from_rgb(0x9C, 0xB0, 0xF5),
-            // Dark text on the light dark-theme accent: white on #7a93f0 is only 2.9:1 (#655).
-            on_accent: Color32::from_rgb(0x11, 0x16, 0x2E),
-            input: Color32::from_rgb(0x1E, 0x1E, 0x1E),
-            input_border: Color32::from_rgb(0x7A, 0x7A, 0x7A),
-            group_label: Color32::from_rgb(0xA0, 0xA0, 0xA0),
-            // The text area is lighter than the margins, as in the light theme (#1148).
-            ruler: Color32::from_rgb(0x45, 0x45, 0x45),
-            ruler_margin: Color32::from_rgb(0x2E, 0x2E, 0x2E),
-            ruler_tick: Color32::from_rgb(0xB4, 0xB4, 0xB4),
-            status_bar: Color32::from_rgb(0x1F, 0x1F, 0x1F),
-            selection: Color32::from_rgba_unmultiplied(0x7A, 0x93, 0xF0, 0x55),
-            find_highlight: Color32::from_rgba_unmultiplied(0xC8, 0xA8, 0x00, 0x70),
-            page_shadow: Color32::from_rgba_unmultiplied(0, 0, 0, 0x60),
-            handle: Color32::from_rgb(0xF2, 0xF2, 0xF2),
-            handle_shadow: Color32::from_rgba_unmultiplied(0, 0, 0, 0x5A),
-            guide: Color32::from_rgb(0xE0, 0x4C, 0xB0),
-            equation_box: Color32::from_rgb(0x6E, 0x9B, 0xE6),
+            title_bar: Color32::from_rgb(0x22, 0x1A, 0x21),
+            ribbon: Color32::from_rgb(0x2B, 0x20, 0x2A),
+            tab_strip: Color32::from_rgb(0x20, 0x17, 0x1E),
+            canvas: Color32::from_rgb(0x18, 0x11, 0x17),
+            panel: Color32::from_rgb(0x28, 0x1E, 0x27),
+            border: Color32::from_rgb(0x45, 0x30, 0x40),
+            border_strong: Color32::from_rgb(0x68, 0x45, 0x5E),
+            text: Color32::from_rgb(0xFA, 0xF2, 0xF6),
+            text_dim: Color32::from_rgb(0xD2, 0xBF, 0xCB),
+            text_disabled: Color32::from_rgb(0x7D, 0x68, 0x77),
+            icon: Color32::from_rgb(0xF0, 0xDF, 0xE9),
+            hover: Color32::from_rgb(0x3D, 0x2B, 0x39),
+            pressed: Color32::from_rgb(0x52, 0x36, 0x4D),
+            checked: Color32::from_rgb(0x4E, 0x2B, 0x41),
+            accent: Color32::from_rgb(0xF4, 0x7B, 0xA5),
+            nav: Color32::from_rgb(0x42, 0x1C, 0x30),
+            accent_text: Color32::from_rgb(0xF8, 0xA4, 0xC4),
+            on_accent: Color32::from_rgb(0x22, 0x0C, 0x18),
+            input: Color32::from_rgb(0x23, 0x19, 0x22),
+            input_border: Color32::from_rgb(0x8D, 0x62, 0x82),
+            group_label: Color32::from_rgb(0xBB, 0xA2, 0xB3),
+            ruler: Color32::from_rgb(0x4A, 0x36, 0x47),
+            ruler_margin: Color32::from_rgb(0x32, 0x23, 0x30),
+            ruler_tick: Color32::from_rgb(0xC4, 0xAF, 0xBE),
+            status_bar: Color32::from_rgb(0x22, 0x1A, 0x21),
+            selection: Color32::from_rgba_unmultiplied(0xF4, 0x7B, 0xA5, 0x50),
+            find_highlight: Color32::from_rgba_unmultiplied(0xF4, 0x7B, 0xA5, 0x60),
+            page_shadow: Color32::from_rgba_unmultiplied(0, 0, 0, 0x70),
+            handle: Color32::from_rgb(0xFA, 0xEE, 0xF5),
+            handle_shadow: Color32::from_rgba_unmultiplied(0, 0, 0, 0x65),
+            guide: Color32::from_rgb(0xFA, 0x5E, 0x9B),
+            equation_box: Color32::from_rgb(0xDE, 0x6B, 0x98),
             crop_handle: Color32::BLACK,
-            crop_dim: Color32::from_rgba_unmultiplied(0x30, 0x30, 0x30, 0xE0),
-            balloon: Color32::from_rgb(0x2B, 0x2B, 0x2B),
-            markup_area: Color32::from_rgb(0x1B, 0x1B, 0x1B),
-            markup_edge: Color32::from_rgb(0x3A, 0x3A, 0x3A),
+            crop_dim: Color32::from_rgba_unmultiplied(0x30, 0x20, 0x28, 0xE0),
+            balloon: Color32::from_rgb(0x33, 0x24, 0x31),
+            markup_area: Color32::from_rgb(0x1F, 0x15, 0x1E),
+            markup_edge: Color32::from_rgb(0x45, 0x30, 0x40),
             resolved_text: Color32::from_rgb(0x5B, 0xC0, 0x8A),
             author_colors: [
-                Color32::from_rgb(0x7F, 0xA8, 0xF2),
-                Color32::from_rgb(0xE5, 0x78, 0x6B),
+                Color32::from_rgb(0xF4, 0x7B, 0xA5),
+                Color32::from_rgb(0xBB, 0x86, 0xFC),
                 Color32::from_rgb(0x6F, 0xBF, 0x73),
-                Color32::from_rgb(0xC0, 0x8F, 0xE0),
-                Color32::from_rgb(0xF0, 0xA0, 0x50),
+                Color32::from_rgb(0xFA, 0xA0, 0x5A),
+                Color32::from_rgb(0x7F, 0xA8, 0xF2),
             ],
             leader_colors: [
-                Color32::from_rgb(0x2F, 0x6F, 0xD0),
-                Color32::from_rgb(0xB0, 0x3A, 0x2E),
-                Color32::from_rgb(0x2E, 0x7D, 0x32),
-                Color32::from_rgb(0x8E, 0x44, 0xAD),
-                Color32::from_rgb(0xE0, 0x7B, 0x1F),
+                Color32::from_rgb(0xF4, 0x7B, 0xA5),
+                Color32::from_rgb(0xBB, 0x86, 0xFC),
+                Color32::from_rgb(0x6F, 0xBF, 0x73),
+                Color32::from_rgb(0xFA, 0xA0, 0x5A),
+                Color32::from_rgb(0x7F, 0xA8, 0xF2),
             ],
-            menu: Color32::from_rgb(0x2B, 0x2B, 0x2B),
-            blue: Color32::from_rgb(0x6C, 0x9B, 0xEA),
-            red: Color32::from_rgb(0xEE, 0x6A, 0x6A),
+            menu: Color32::from_rgb(0x30, 0x22, 0x2E),
+            blue: Color32::from_rgb(0x8E, 0x7B, 0xF8),
+            red: Color32::from_rgb(0xF8, 0x62, 0x7A),
             green: Color32::from_rgb(0x5B, 0xC0, 0x8A),
-            orange: Color32::from_rgb(0xF0, 0xA0, 0x50),
-            // A little lighter than the light theme's red, so it reads against the dark window.
-            close_hover: Color32::from_rgb(0xD6, 0x3C, 0x2C),
-            close_pressed: Color32::from_rgb(0xB3, 0x30, 0x23),
+            orange: Color32::from_rgb(0xFA, 0xA0, 0x5A),
+            close_hover: Color32::from_rgb(0xEA, 0x38, 0x55),
+            close_pressed: Color32::from_rgb(0xCA, 0x24, 0x40),
             on_close: Color32::WHITE,
         }
     }
+
+    pub fn light() -> Self {
+        Self::sakura_rose()
+    }
+
+    pub fn dark() -> Self {
+        Self::velvet_midnight()
+    }
+
+    pub fn for_appearance(appearance: Appearance, is_dark: bool) -> Self {
+        match appearance {
+            Appearance::SakuraRose => Self::sakura_rose(),
+            Appearance::LotusPearl => Self::lotus_pearl(),
+            Appearance::EmeraldJade => Self::emerald_jade(),
+            Appearance::GoldenAmber => Self::golden_amber(),
+            Appearance::VelvetMidnight => Self::velvet_midnight(),
+            Appearance::System => if is_dark { Self::velvet_midnight() } else { Self::sakura_rose() },
+        }
+    }
+
     pub fn get(ctx: &egui::Context) -> Tokens {
         if ctx.global_style().visuals.dark_mode { Tokens::dark() } else { Tokens::light() }
     }
@@ -497,10 +619,9 @@ pub fn add_fallback_faces(fonts: &mut FontDefinitions, faces: &[Arc<wordcraft_fo
 }
 
 /// A character the window caption can already draw without a document fallback: the Latin range
-/// the interface faces cover, or CJK, which uses the CJK UI font ([`install_fonts`]) rather
-/// than a document face. System CJK collections are larger than [`faces_for_preedit`] will load.
+/// the interface faces cover, CJK, or Myanmar (which is covered by bundled Pyidaungsu).
 pub fn caption_char_covered(c: char) -> bool {
-    (c as u32) < 0x250 || wordcraft_fonts::is_cjk(c)
+    (c as u32) < 0x250 || wordcraft_fonts::is_cjk(c) || matches!(c, '\u{1000}'..='\u{109F}' | '\u{A9E0}'..='\u{A9FF}' | '\u{AA60}'..='\u{AA7F}')
 }
 
 /// Document faces needed to draw `text` (the input method's composition, or a file name in the
@@ -530,7 +651,7 @@ pub fn install_fonts(ctx: &egui::Context) {
     ctx.set_fonts(font_definitions());
 }
 
-/// The interface fonts: Inter, Source Sans and JetBrains Mono, behind egui's default fallbacks.
+/// The interface fonts: Inter, Pyidaungsu (Myanmar UI font), Padauk, Source Sans and JetBrains Mono.
 pub fn font_definitions() -> FontDefinitions {
     let mut fonts = FontDefinitions::default();
     let add = |fonts: &mut FontDefinitions, name: &str, bytes: &'static [u8]| {
@@ -541,15 +662,21 @@ pub fn font_definitions() -> FontDefinitions {
     add(&mut fonts, "InterSemiBold", include_bytes!("../../../../assets/fonts/Inter-SemiBold.ttf"));
     add(&mut fonts, "SourceSans", include_bytes!("../../../../assets/fonts/SourceSans3-Regular.ttf"));
     add(&mut fonts, "Mono", include_bytes!("../../../../assets/fonts/JetBrainsMono-Regular.ttf"));
+    add(&mut fonts, "Pyidaungsu", include_bytes!("../../../../assets/fonts/Pyidaungsu-Regular.ttf"));
+    add(&mut fonts, "PyidaungsuBold", include_bytes!("../../../../assets/fonts/Pyidaungsu-Bold.ttf"));
+    add(&mut fonts, "Padauk", include_bytes!("../../../../assets/fonts/Padauk-Regular.ttf"));
     if let Some(prop) = fonts.families.get_mut(&FontFamily::Proportional) {
         prop.insert(0, "Inter".into());
+        prop.insert(1, "Pyidaungsu".into());
+        prop.insert(2, "Padauk".into());
         prop.push("SourceSans".into());
     }
     if let Some(m) = fonts.families.get_mut(&FontFamily::Monospace) {
         m.insert(0, "Mono".into());
+        m.push("Pyidaungsu".into());
     }
-    fonts.families.insert(FontFamily::Name("medium".into()), vec!["InterMedium".into(), "Inter".into(), "SourceSans".into()]);
-    fonts.families.insert(FontFamily::Name("semibold".into()), vec!["InterSemiBold".into(), "Inter".into(), "SourceSans".into()]);
+    fonts.families.insert(FontFamily::Name("medium".into()), vec!["InterMedium".into(), "Inter".into(), "PyidaungsuBold".into(), "Pyidaungsu".into(), "SourceSans".into()]);
+    fonts.families.insert(FontFamily::Name("semibold".into()), vec!["InterSemiBold".into(), "Inter".into(), "PyidaungsuBold".into(), "Pyidaungsu".into(), "SourceSans".into()]);
     // Symbols and emoji fall back to egui's defaults (kept in the families).
     fonts
 }
@@ -679,13 +806,20 @@ fn tracked_job(text: &str, font: &FontId, tracking: f32, color: Color32) -> egui
 /// Setting a concrete theme for `System` would pin the native window too, and macOS then stops
 /// reporting appearance changes (#311).
 pub fn apply(ctx: &egui::Context, appearance: Appearance) {
-    ctx.set_visuals_of(egui::Theme::Light, visuals(&Tokens::light()));
-    ctx.set_visuals_of(egui::Theme::Dark, visuals(&Tokens::dark()));
+    let is_dark = appearance.is_dark(ctx.system_theme());
+    let active_tokens = Tokens::for_appearance(appearance, is_dark);
+    let light_tokens = Tokens::for_appearance(appearance, false);
+    let dark_tokens = Tokens::for_appearance(appearance, true);
+
+    ctx.set_visuals_of(egui::Theme::Light, visuals(&light_tokens));
+    ctx.set_visuals_of(egui::Theme::Dark, visuals(&dark_tokens));
+    ctx.set_visuals(visuals(&active_tokens));
+
     ctx.all_styles_mut(|s| {
-        s.spacing.item_spacing = egui::vec2(6.0, 4.0);
-        s.spacing.button_padding = egui::vec2(8.0, 3.0);
-        s.spacing.interact_size = egui::vec2(24.0, 22.0);
-        s.spacing.menu_margin = egui::Margin::same(6);
+        s.spacing.item_spacing = egui::vec2(7.0, 5.0);
+        s.spacing.button_padding = egui::vec2(10.0, 4.0);
+        s.spacing.interact_size = egui::vec2(26.0, 24.0);
+        s.spacing.menu_margin = egui::Margin::same(8);
         s.text_styles.insert(egui::TextStyle::Body, regular(12.5));
         s.text_styles.insert(egui::TextStyle::Button, regular(12.5));
         s.text_styles.insert(egui::TextStyle::Small, regular(10.5));
@@ -696,6 +830,7 @@ pub fn apply(ctx: &egui::Context, appearance: Appearance) {
         o.fallback_theme = egui::Theme::Light;
         o.theme_preference = appearance.preference();
     });
+    ctx.request_repaint();
 }
 
 /// Turn egui's own animations on or off: hover and press fades, menus, tooltips and windows fading
@@ -728,10 +863,10 @@ fn visuals(t: &Tokens) -> Visuals {
     v.extreme_bg_color = t.input;
     v.faint_bg_color = t.panel;
     v.window_stroke = Stroke::new(1.0, t.border_strong);
-    v.window_corner_radius = CornerRadius::same(8);
-    v.menu_corner_radius = CornerRadius::same(6);
+    v.window_corner_radius = CornerRadius::same(16);
+    v.menu_corner_radius = CornerRadius::same(14);
     v.selection.bg_fill = t.selection;
-    v.selection.stroke = Stroke::new(1.0, t.accent);
+    v.selection.stroke = Stroke::new(1.5, t.accent);
     v.hyperlink_color = t.accent_text;
     v.widgets.noninteractive.bg_stroke = Stroke::new(1.0, t.border);
     v.widgets.noninteractive.fg_stroke = Stroke::new(1.0, t.text);
@@ -739,20 +874,21 @@ fn visuals(t: &Tokens) -> Visuals {
     v.widgets.inactive.weak_bg_fill = t.input;
     v.widgets.inactive.bg_stroke = Stroke::new(1.0, t.input_border);
     v.widgets.inactive.fg_stroke = Stroke::new(1.0, t.text);
-    v.widgets.inactive.corner_radius = CornerRadius::same(4);
+    v.widgets.inactive.corner_radius = CornerRadius::same(10);
     v.widgets.hovered.bg_fill = t.hover;
     v.widgets.hovered.weak_bg_fill = t.hover;
-    v.widgets.hovered.bg_stroke = Stroke::new(1.0, t.border_strong);
+    v.widgets.hovered.bg_stroke = Stroke::new(1.2, t.border_strong);
     v.widgets.hovered.fg_stroke = Stroke::new(1.0, t.text);
-    v.widgets.hovered.corner_radius = CornerRadius::same(4);
+    v.widgets.hovered.corner_radius = CornerRadius::same(10);
     v.widgets.active.bg_fill = t.pressed;
     v.widgets.active.weak_bg_fill = t.pressed;
     v.widgets.active.fg_stroke = Stroke::new(1.0, t.text);
-    v.widgets.active.corner_radius = CornerRadius::same(4);
+    v.widgets.active.corner_radius = CornerRadius::same(10);
     v.widgets.open.bg_fill = t.pressed;
     v.widgets.open.weak_bg_fill = t.pressed;
-    v.popup_shadow = egui::Shadow { offset: [0, 4], blur: 16, spread: 0, color: Color32::from_black_alpha(if t.dark { 120 } else { 40 }) };
-    v.window_shadow = egui::Shadow { offset: [0, 8], blur: 28, spread: 0, color: Color32::from_black_alpha(if t.dark { 140 } else { 50 }) };
+    v.widgets.open.corner_radius = CornerRadius::same(10);
+    v.popup_shadow = egui::Shadow { offset: [0, 8], blur: 28, spread: 0, color: Color32::from_black_alpha(if t.dark { 140 } else { 35 }) };
+    v.window_shadow = egui::Shadow { offset: [0, 12], blur: 40, spread: 0, color: Color32::from_black_alpha(if t.dark { 160 } else { 45 }) };
     v
 }
 

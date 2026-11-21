@@ -26,6 +26,7 @@ pub mod lists;
 pub mod mailings;
 pub mod md_source;
 pub mod moves;
+pub mod myanmar_tools;
 pub mod objects;
 pub mod options;
 pub mod outline;
@@ -103,6 +104,7 @@ pub fn registry() -> Registry {
     v.extend(wordart::specs());
     v.extend(connectors::specs());
     v.extend(tools::specs());
+    v.extend(myanmar_tools::specs());
     v.extend(templates::specs());
     v.extend(user_templates::specs());
     v.extend(protect::specs());

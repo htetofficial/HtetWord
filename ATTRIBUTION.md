@@ -29,6 +29,11 @@ The UI icons are SVG files in `crates/ui-egui/icons/`, one row each below. Gener
 | `assets/fonts/Inter-Medium.ttf` | Rasmus Andersson / The Inter Project Authors | https://github.com/rsms/inter | OFL-1.1 (`assets/fonts/OFL-Inter.txt`) | Open-source typeface (Latin UI/document font, carried over from DesignCraft) |
 | `assets/fonts/Inter-Regular.ttf` | Rasmus Andersson / The Inter Project Authors | https://github.com/rsms/inter | OFL-1.1 (`assets/fonts/OFL-Inter.txt`) | Open-source typeface (Latin UI/document font, carried over from DesignCraft) |
 | `assets/fonts/Inter-SemiBold.ttf` | Rasmus Andersson / The Inter Project Authors | https://github.com/rsms/inter | OFL-1.1 (`assets/fonts/OFL-Inter.txt`) | Open-source typeface (Latin UI/document font, carried over from DesignCraft) |
+| `assets/fonts/Pyidaungsu-Regular.ttf` | Myanmar Computer Federation / NLP Team | https://github.com/mcfnlp/Pyidaungsu | OFL-1.1 | Open-source typeface (Official Myanmar Unicode standard font) |
+| `assets/fonts/Pyidaungsu-Bold.ttf` | Myanmar Computer Federation / NLP Team | https://github.com/mcfnlp/Pyidaungsu | OFL-1.1 | Open-source typeface (Official Myanmar Unicode standard font) |
+| `assets/fonts/Padauk-Regular.ttf` | SIL International | https://software.sil.org/padauk/ | OFL-1.1 | Open-source typeface (SIL Myanmar OpenType font) |
+| `assets/fonts/Padauk-Bold.ttf` | SIL International | https://software.sil.org/padauk/ | OFL-1.1 | Open-source typeface (SIL Myanmar OpenType font) |
+| `assets/fonts/MyanmarSansPro-Regular.ttf` | Open Typography Foundation / Myanmar NLP | https://github.com/Open-Typography-Foundation/Myanmar-Burmese-Fonts-Archive | OFL-1.1 | Open-source typeface (Myanmar sans-serif font) |
 | `assets/fonts/JetBrainsMono-Regular.ttf` | The JetBrains Mono Project Authors | https://github.com/JetBrains/JetBrainsMono | OFL-1.1 (`assets/fonts/OFL-JetBrainsMono.txt`) | Open-source typeface (Latin UI/document font, carried over from DesignCraft) |
 | `assets/fonts/OFL-Inter.txt` | (licence text) | upstream project | — |  |
 | `assets/fonts/OFL-JetBrainsMono.txt` | (licence text) | upstream project | — |  |

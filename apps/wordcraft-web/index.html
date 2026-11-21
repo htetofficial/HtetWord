@@ -1,20 +1,142 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="my">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-  <title>WordCraft</title>
-  <link data-trunk rel="icon" href="../../assets/app-icon/wordcraft.ico" />
-  <link data-trunk rel="rust" data-bin="wordcraft-web" data-wasm-opt="z" data-weak-refs />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>HtetWord - မြန်မာစာနှင့် စာပေအရေးအသား အက်ပ်</title>
+  <meta name="description" content="HtetWord - Floating and Liquid Glass Word Processor designed for Myanmar writers, articles, books, and social media posts.">
+  <meta name="theme-color" content="#E84A7F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link data-trunk rel="icon" href="../../assets/app-icon/wordcraft.svg" type="image/svg+xml" />
+  <link data-trunk rel="copy-file" href="manifest.json" />
+  <link data-trunk rel="copy-dir" href="../../assets/fonts" />
+  <link rel="manifest" href="manifest.json">
+  <link data-trunk rel="rust" data-bin="wordcraft-web" data-wasm-opt="0" data-weak-refs />
   <style>
-    html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #e6e6e6; }
-    #wordcraft_canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-    #wordcraft_loading { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
-      color: #555; font: 14px system-ui, sans-serif; pointer-events: none; }
+    @font-face {
+      font-family: 'Pyidaungsu';
+      src: url('fonts/Pyidaungsu-Regular.ttf') format('truetype'),
+           url('./fonts/Pyidaungsu-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Pyidaungsu';
+      src: url('fonts/Pyidaungsu-Bold.ttf') format('truetype'),
+           url('./fonts/Pyidaungsu-Bold.ttf') format('truetype');
+      font-weight: bold;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: radial-gradient(circle at top left, #FFF0F5, #FCE4EC 40%, #F8E1EE 100%);
+      font-family: 'Pyidaungsu', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    #wordcraft_canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      touch-action: none;
+    }
+
+    /* Floating Liquid Glass Loading Screen */
+    #wordcraft_loading {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      pointer-events: none;
+      transition: opacity 0.4s ease-out;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(24px) saturate(190%);
+      -webkit-backdrop-filter: blur(24px) saturate(190%);
+      border: 1.5px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 0 20px 50px rgba(232, 74, 127, 0.16), 0 4px 12px rgba(255, 255, 255, 0.8) inset;
+      border-radius: 28px;
+      padding: 38px 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      max-width: 380px;
+      width: 88%;
+      animation: floatPulse 3s ease-in-out infinite alternate;
+    }
+
+    .brand-title {
+      font-size: 26px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #E84A7F 0%, #B8255F 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 12px 0 6px 0;
+      letter-spacing: -0.5px;
+    }
+
+    .tagline {
+      font-size: 13px;
+      color: #7A5366;
+      margin-bottom: 22px;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    .spinner-ring {
+      width: 44px;
+      height: 44px;
+      border: 3.5px solid rgba(232, 74, 127, 0.18);
+      border-top-color: #E84A7F;
+      border-right-color: #F47BA5;
+      border-radius: 50%;
+      animation: spin 0.9s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
+    }
+
+    .loading-msg {
+      margin-top: 16px;
+      font-size: 13.5px;
+      color: #9E1B46;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes floatPulse {
+      0% { transform: translateY(0px); box-shadow: 0 16px 40px rgba(232, 74, 127, 0.12); }
+      100% { transform: translateY(-8px); box-shadow: 0 28px 60px rgba(232, 74, 127, 0.22); }
+    }
   </style>
 </head>
 <body>
   <canvas id="wordcraft_canvas"></canvas>
-  <div id="wordcraft_loading">Loading WordCraft&hellip;</div>
+  <div id="wordcraft_loading">
+    <div class="glass-card">
+      <div class="spinner-ring"></div>
+      <div class="brand-title">HtetWord</div>
+      <div class="tagline">မြန်မာစာနှင့် စာပေအရေးအသား အက်ပ်<br><span style="font-size: 11px; opacity: 0.85;">Floating & Liquid Glass UI</span></div>
+      <div class="loading-msg">ဖွင့်လှစ်နေပါသည်&hellip;</div>
+    </div>
+  </div>
 </body>
 </html>

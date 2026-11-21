@@ -281,20 +281,8 @@ fn side_menu(ui: &mut Ui, band: f32, current: &str, has_document: bool, show_dis
         });
 }
 
-/// The side menu's foot: the community link (unless the user turned it off) above About.
-fn footer_links(ui: &mut Ui, show_discord: bool, choice: &MenuChoice) {
-    if show_discord
-        && clicked(
-            &Button::new(label("Discord community"))
-                .id_salt("backstage-discord")
-                .variant(Variant::GHOST)
-                .sizing(Sizing::FillWidth)
-                .align(HAlign::Start)
-                .show(ui),
-        )
-    {
-        choice.discord.set(true);
-    }
+/// The side menu's foot: About button.
+fn footer_links(ui: &mut Ui, _show_discord: bool, choice: &MenuChoice) {
     if clicked(
         &Button::new(label("About")).id_salt("backstage-about").variant(Variant::GHOST).sizing(Sizing::FillWidth).align(HAlign::Start).show(ui),
     ) {
@@ -363,11 +351,20 @@ fn works_without_document(page: &str) -> bool {
 }
 
 /// The built-in templates in gallery order: display label and the `file.new` template id.
-const TEMPLATES: [(&str, &str); 5] =
-    [("Blank document", "blank"), ("Studio handbook (sample)", "sample"), ("Letter", "letter"), ("Résumé", "resume"), ("Report", "report")];
+const TEMPLATES: [(&str, &str); 9] = [
+    ("Blank document", "blank"),
+    ("မြန်မာ ဆောင်းပါး (Article)", "myanmar_article"),
+    ("မြန်မာ စာအုပ်/ဝတ္ထု (Book)", "myanmar_book"),
+    ("မြန်မာ ဆိုရှယ်ပို့စ် (Post)", "myanmar_post"),
+    ("မြန်မာ စာစီစာကုံး (Essay)", "myanmar_essay"),
+    ("Studio handbook (sample)", "sample"),
+    ("Letter", "letter"),
+    ("Résumé", "resume"),
+    ("Report", "report"),
+];
 
 /// How many templates Home shows before "More templates" (the rest are on New).
-const HOME_TEMPLATES: usize = 4;
+const HOME_TEMPLATES: usize = 5;
 
 /// The templates whose English or translated label, or id, contains `query` (case-insensitive;
 /// the id lets "resume" find "Résumé"); all of them for an empty query.
